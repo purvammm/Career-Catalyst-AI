@@ -1,10 +1,5 @@
 import { Company, GroundingSource, Contact, ContactStreamResult } from "../types";
-
-const mockCompanies: Company[] = [
-  { companyName: "Innovate Inc.", description: "A leading provider of innovative solutions.", website: "https://innovate.com" },
-  { companyName: "Tech Solutions Ltd.", description: "Your partner in digital transformation.", website: "https://techsolutions.com" },
-  { companyName: "Future Systems", description: "Building the technology of tomorrow.", website: "https://futuresystems.com" },
-];
+import { getCompaniesInBoundingBox } from "./overpassService";
 
 const mockContacts: Contact[] = [
     { name: "Jane Doe", role: "HR Manager", type: "email", value: "jane.doe@innovate.com", verification: "verified", notes: "Found on company website" },
@@ -12,17 +7,17 @@ const mockContacts: Contact[] = [
     { name: "Peter Jones", role: "CTO", type: "email", value: "peter.jones@techsolutions.com", verification: "inferred", notes: "Inferred from common 'first.last' email pattern." },
 ];
 
-export async function* streamCompaniesInLocation(location: string): AsyncGenerator<{ company?: Company; sources?: GroundingSource[] }> {
-  for (const company of mockCompanies) {
-    if (location.toLowerCase() === 'san francisco') {
-        yield { company };
-    }
-    await new Promise(resolve => setTimeout(resolve, 500));
+export async function* streamCompaniesInLocation(boundingBox: string): AsyncGenerator<{ company?: Company; sources?: GroundingSource[] }> {
+  const companies = await getCompaniesInBoundingBox(boundingBox);
+
+  for (const company of companies) {
+    yield { company };
+    await new Promise(resolve => setTimeout(resolve, 100));
   }
 
   const sources: GroundingSource[] = [
-    { uri: "https://www.mock-source1.com", title: "Mock Source 1" },
-    { uri: "https://www.mock-source2.com", title: "Mock Source 2" },
+    { uri: "https://www.openstreetmap.org/", title: "OpenStreetMap" },
+    { uri: "https://overpass-api.de/", title: "Overpass API" },
   ];
   yield { sources };
 }
