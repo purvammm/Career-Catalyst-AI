@@ -12,7 +12,7 @@ import ErrorMessage from './ErrorMessage';
 interface DraftingViewProps {
   companies: Company[];
   onBack: () => void;
-  geminiService: typeof MockApiService;
+  apiService: typeof MockApiService;
 }
 
 const ResumeContent: React.FC<{ company: Company, state: ResumeState, onGenerate: () => void, onCopy: () => void, isCopied: boolean }> = ({ company, state, onGenerate, onCopy, isCopied }) => {
@@ -168,7 +168,7 @@ const ContactContent: React.FC<{ company: Company, state: ContactState, onGenera
     );
 };
 
-const DraftingView: React.FC<DraftingViewProps> = ({ companies, onBack, geminiService }) => {
+const DraftingView: React.FC<DraftingViewProps> = ({ companies, onBack, apiService }) => {
   const [userInfo, setUserInfo] = useState('');
   const [resumeStates, setResumeStates] = useState<Map<string, ResumeState>>(() =>
     new Map(companies.map(c => [c.companyName, { status: 'idle', content: '' }]))
@@ -204,7 +204,7 @@ const DraftingView: React.FC<DraftingViewProps> = ({ companies, onBack, geminiSe
     setResumeStates(prev => new Map(prev).set(company.companyName, { status: 'generating', content: '' }));
 
     try {
-        const stream = geminiService.draftTailoredResume(userInfo, company);
+        const stream = apiService.draftTailoredResume(userInfo, company);
         for await (const chunk of stream) {
             setResumeStates(prev => {
                 const current = prev.get(company.companyName);
@@ -226,7 +226,7 @@ const DraftingView: React.FC<DraftingViewProps> = ({ companies, onBack, geminiSe
     setContactStates(prev => new Map(prev).set(company.companyName, { status: 'generating', contacts: [], sources: [] }));
 
     try {
-        const stream = geminiService.streamCompanyContacts(company);
+        const stream = apiService.streamCompanyContacts(company);
         for await (const result of stream) {
             if (result.contact) {
                  setContactStates(prev => {

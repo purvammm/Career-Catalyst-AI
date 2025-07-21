@@ -111,7 +111,7 @@ export default function App() {
         onBack={() => {
           setAppStage('search');
         }}
-        geminiService={mockApiService}
+        apiService={mockApiService}
       />
     );
   }
