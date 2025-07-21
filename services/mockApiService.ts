@@ -49,17 +49,19 @@ A highly motivated and experienced professional seeking a challenging role at ${
   }
 }
 
+import { getContactsForDomain } from "./hunterService";
+
 export async function* streamCompanyContacts(company: Company): AsyncGenerator<ContactStreamResult> {
-    for (const contact of mockContacts) {
-        if (contact.value.includes(company.companyName.toLowerCase().split(' ')[0])) {
-            yield { contact };
-        }
-        await new Promise(resolve => setTimeout(resolve, 500));
+    const domain = new URL(company.website).hostname;
+    const contacts = await getContactsForDomain(domain);
+
+    for (const contact of contacts) {
+        yield { contact };
+        await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     const sources: GroundingSource[] = [
-        { uri: "https://www.mock-contact-source1.com", title: "Mock Contact Source 1" },
-        { uri: "https://www.mock-contact-source2.com", title: "Mock Contact Source 2" },
+        { uri: "https://hunter.io/", title: "Hunter.io" },
     ];
     yield { sources };
 }
