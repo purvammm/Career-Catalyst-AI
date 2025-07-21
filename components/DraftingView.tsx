@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { Company, ResumeState, ContactState, Contact, GroundingSource } from '../types';
-import * as GeminiService from '../services/geminiService';
+import * as MockApiService from '../services/mockApiService';
 import { 
     ArrowLeftIcon, ClipboardIcon, CheckIcon, SparklesIcon, ArrowPathIcon, UploadIcon, CheckCircleIcon, 
     ExclamationCircleIcon, UsersIcon, AtSymbolIcon, LinkedInIcon 
@@ -12,7 +12,7 @@ import ErrorMessage from './ErrorMessage';
 interface DraftingViewProps {
   companies: Company[];
   onBack: () => void;
-  geminiService: typeof GeminiService;
+  geminiService: typeof MockApiService;
 }
 
 const ResumeContent: React.FC<{ company: Company, state: ResumeState, onGenerate: () => void, onCopy: () => void, isCopied: boolean }> = ({ company, state, onGenerate, onCopy, isCopied }) => {

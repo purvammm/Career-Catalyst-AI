@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { Company, GroundingSource } from './types';
-import * as geminiService from './services/geminiService';
+import * as mockApiService from './services/mockApiService';
 import SearchForm from './components/SearchForm';
 import CompanyList from './components/CompanyList';
 import DraftingView from './components/DraftingView';
@@ -41,7 +41,7 @@ export default function App() {
     setLocation(searchLocation);
     
     try {
-      const stream = geminiService.streamCompaniesInLocation(searchLocation);
+      const stream = mockApiService.streamCompaniesInLocation(searchLocation);
       for await (const result of stream) {
         if (stopSearchRef.current) {
           break;
@@ -107,7 +107,7 @@ export default function App() {
         onBack={() => {
           setAppStage('search');
         }}
-        geminiService={geminiService}
+        geminiService={mockApiService}
       />
     );
   }
