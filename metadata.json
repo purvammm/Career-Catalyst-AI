@@ -1,0 +1,6 @@
+{
+  "name": "Career Catalyst AI",
+  "description": "An intelligent job-seeking assistant. Enter a location to discover tech companies, and provide your skills or resume to generate a tailored resume draft for any company you find, powered by Google's Gemini API.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
